@@ -9,6 +9,10 @@ namespace ApplicationAuth.Common.Extensions
         {
             return date.ToString("yyyy-MM-ddTHH:mm:ssZ");
         }
+        public static string ToFileName(this DateTime date)
+        {
+            return date.ToString("yyyy-MM-ddTHH-mm-ssZ");
+        }
 
         public static string ToISO(this DateTime? date)
         {

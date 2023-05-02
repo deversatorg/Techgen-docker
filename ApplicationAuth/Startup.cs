@@ -101,9 +101,18 @@ namespace ApplicationAuth
             services.AddSingleton<IHashUtility, HashUtility>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProfileService, ProfileService>();
+
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ILikeService, LikeService>();
+
+            services.AddScoped<IRoadmapService, RoadmapService>();
+            services.AddScoped<IVacanciesParser, VacanciesParser>();
 
             #endregion
 
@@ -491,7 +500,7 @@ namespace ApplicationAuth
             });
         }
 
-        /*static string XmlCommentsFilePath
+        static string XmlCommentsFilePath
         {
             get
             {
@@ -500,9 +509,9 @@ namespace ApplicationAuth
                 Environment.SetEnvironmentVariable("XML_COMMENTS_FILE_PATH", Path.Combine(basePath, fileName));
                 return Path.Combine(basePath, fileName);
             }
-        }*/
+        }
 
-        static string XmlCommentsFilePath => "/app/ApplicationAuth.xml";
+        //static string XmlCommentsFilePath => "/app/ApplicationAuth.xml";
 
         static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {

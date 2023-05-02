@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ApplicationAuth.Domain.Entities.PostEntities;
 
 namespace ApplicationAuth.Domain.Entities.Identity
 {
@@ -56,6 +57,15 @@ namespace ApplicationAuth.Domain.Entities.Identity
 
         [InverseProperty("User")]
         public virtual ICollection<UserChangeRequest> UserChangeRequests { get; set; }
+
+        [InverseProperty("User")]
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        [InverseProperty("User")]
+        public virtual ICollection<Post> Posts { get; set; }
+
+        [InverseProperty("User")]
+        public virtual ICollection<Like> Likes { get; set; }
 
         #endregion
 

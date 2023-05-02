@@ -25,5 +25,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY ApplicationAuth/database.db /app
+COPY ApplicationAuth/wwwroot/Resources/RoadmapImages /app/wwwroot/Resources/RoadmapImages
 COPY bin/Debug/ApplicationAuth.xml /app
 ENTRYPOINT ["dotnet", "ApplicationAuth.dll"]

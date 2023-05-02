@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApplicationAuth.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230430121007_Init")]
+    [Migration("20230430205834_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -291,6 +291,113 @@ namespace ApplicationAuth.DAL.Migrations
                     b.ToTable("VerificationTokens");
                 });
 
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.RoadmapEntities.Roadmap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Markdown")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roadmaps");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -447,6 +554,59 @@ namespace ApplicationAuth.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Comment", b =>
+                {
+                    b.HasOne("ApplicationAuth.Domain.Entities.PostEntities.Comment", null)
+                        .WithMany("Answers")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("ApplicationAuth.Domain.Entities.PostEntities.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApplicationAuth.Domain.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Like", b =>
+                {
+                    b.HasOne("ApplicationAuth.Domain.Entities.PostEntities.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApplicationAuth.Domain.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Post", b =>
+                {
+                    b.HasOne("ApplicationAuth.Domain.Entities.Identity.ApplicationUser", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("ApplicationAuth.Domain.Entities.Identity.ApplicationRole", null)
@@ -490,7 +650,13 @@ namespace ApplicationAuth.DAL.Migrations
 
             modelBuilder.Entity("ApplicationAuth.Domain.Entities.Identity.ApplicationUser", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Devices");
+
+                    b.Navigation("Likes");
+
+                    b.Navigation("Posts");
 
                     b.Navigation("Profile");
 
@@ -501,6 +667,18 @@ namespace ApplicationAuth.DAL.Migrations
                     b.Navigation("UserRoles");
 
                     b.Navigation("VerificationTokens");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Comment", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("ApplicationAuth.Domain.Entities.PostEntities.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }
